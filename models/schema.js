@@ -38,27 +38,14 @@ const visitAvailabilitySchema = new mongoose.Schema({
     realtor_id: String
 });
 
-const tenantSchema = new mongoose.Schema({
-    id: String,
-    name: String,
-    email: String,
-    phone: String,
-    houseVisit: [{
-        houseId: String,
-        realtorId: Number,
-        converted: Boolean
-    }]
-});
 
 const REALTOR = mongoose.model('realtor', realtorSchema);
-const TENANT = mongoose.model('tenant', tenantSchema);
 const VISIT_AVAILABILITY = mongoose.model('visit_availability', visitAvailabilitySchema);
 const HOUSES = mongoose.model('houses', houseInfoSchema);
 const OWNERS = mongoose.model('owners', ownerSchema);
 
 module.exports = {
     REALTOR: REALTOR,
-    TENANT: TENANT,
     VISIT_AVAILABILITY: VISIT_AVAILABILITY,
     HOUSES: HOUSES,
     OWNERS: OWNERS

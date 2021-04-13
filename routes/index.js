@@ -1,8 +1,6 @@
 const router = require('express').Router();
 
-
 const controller = require('../controller/controller');
-
 
 router.get('/', controller.getHouseList);
 router.get('/data', controller.getHouseList);

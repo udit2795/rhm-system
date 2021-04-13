@@ -1,4 +1,5 @@
 const shortid = require('shortid');
+const nodemailer = require('nodemailer');
 
 
 const setData = (schema, dataToSave) => {
@@ -39,7 +40,7 @@ const setNewHouseData = (schema, data) => {
     return schema;
 };
 
-const setNewOwnerData = (schema, data)=>{
+const setNewOwnerData = (schema, data) => {
     const dataToSave = {
         id: shortid.generate(),
         name: data.name,
@@ -50,7 +51,7 @@ const setNewOwnerData = (schema, data)=>{
     return schema;
 };
 
-const setNewRealtorData = (schema, data)=>{
+const setNewRealtorData = (schema, data) => {
     const dataToSave = {
         id: shortid.generate(),
         name: data.name,
@@ -75,20 +76,20 @@ const getList = (houses) => {
 };
 
 const weekDayMap = {
-    '0' : 'Sunday',
-    '1' : 'Monday',
-    '2' : 'Tuesday',
-    '3' : 'Wednesday',
-    '4' : 'Thursday',
-    '5' : 'Friday',
-    '6' : 'Saturday'
+    '0': 'Sunday',
+    '1': 'Monday',
+    '2': 'Tuesday',
+    '3': 'Wednesday',
+    '4': 'Thursday',
+    '5': 'Friday',
+    '6': 'Saturday'
 };
 
-const getHouseVisitData = (availableSlots)=>{
-  let slots = [];
+const getHouseVisitData = (availableSlots) => {
+    let slots = [];
     availableSlots.forEach(slot => {
         slots.push({
-            id:slot.id,
+            id: slot.id,
             start_time: slot.start_time,
             duration: slot.duration,
             day_of_week: slot.day_of_week,
@@ -99,18 +100,21 @@ const getHouseVisitData = (availableSlots)=>{
     return slots
 };
 
-const sendmail = (tenantDetails, homeAddress, realtorDetails) => {
+
+//https://myaccount.google.com/u/1/lesssecureapps?rapt=AEjHL4Nn2xUsRB-wxmalyGIxk2YgwUeDQA0B8N18twCsu5xO6_CytlAuW5kP4kgNRxxKoFpTRot2x4goQMBfBTfpoQTSPgXFSQ
+// Please Allow less secure app to access gmail
+
+const sendmail = (tenantDetails, homeAddress, realtorDetails, cb) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'udit328@gmail.com',
-            pass: 'xxxx'
+            user: '*******@gmail.com', // add your mail ID
+            pass: '*****' // add your password
         }
     });
-
     var mailOptions = {
-        from: 'udit328@gmail.com',
-        to: 'udit2795@gmail.com', // tenantDetails.email realtorDetails.email
+        from: '*****@gmail.com',
+        to:  `${tenantDetails.email} ${realtorDetails.email}`,
         subject: 'Realtal Home visit Details',
         text: `Hi ${tenantDetails.name},
             Thank you booking. Below are the details
@@ -124,10 +128,10 @@ const sendmail = (tenantDetails, homeAddress, realtorDetails) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            Promise.reject(error)
+            return cb(error)
         } else {
             console.log('Email sent: ' + info.response);
-            Promise.resolve()
+            return cb()
         }
     });
 };

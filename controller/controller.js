@@ -3,25 +3,21 @@ const controllerHelper = require('../utils/controller_helper');
 
 
 const getHouseList = async (req, res) => {
-    console.log("==>>>req", req);
     try {
         const houseList = await schemas.HOUSES.find({active: true}).lean();
         const houseDetails = controllerHelper.getList(houseList);
-        console.log("===>>>> sending data", houseDetails);
         res.status(200).send(houseDetails)
-        // res.status(200).render('dashboard', {data: houseDetails, status: 'success'})
-    } catch (e) {
-        console.log("===>>>> error", e);
+    } catch (err) {
+        console.error("Error in fetching house list", err);
+        res.status(400).send("Error in fetching house list" + err)
     }
 };
 
 const getSlots = async (req, res) => {
     const data = req.params;
-    console.log("===>>>> req.params", req.params);
     const houseId = data.id;
     try {
         const visitingTime = await schemas.VISIT_AVAILABILITY.find({property_id: houseId, status: 'Available'}).lean();
-        console.log("===>>>visitingTime", visitingTime);
         const slots = controllerHelper.getHouseVisitData(visitingTime);
         res.status(200).send(slots)
 
@@ -41,17 +37,24 @@ const bookSlots = async (req, res) => {
     const homeAddress = data.address;
     const realtor_id = data.realtor_id;
     try {
-        const realtorDetail = await schemas.REALTOR.find({realtor_id: realtor_id}).lean();
+        const realtorDetail = await schemas.REALTOR.findOne({id: realtor_id}).lean();
+        console.log("===>>>realtorDetail", realtorDetail);
         const realtorDetails = {
             email: realtorDetail.email,
             name: realtorDetail.name,
             phone: realtorDetail.phone
         };
-        await controllerHelper.sendmail(tenantDetails, homeAddress, realtorDetails);
+        controllerHelper.sendmail(tenantDetails, homeAddress, realtorDetails, function (error) {
+            if (error) {
+                res.status(400).send("Error" + e)
+            } else {
+                res.status(200).send("Success")
+            }
+        });
 
-
-    } catch (e) {
-
+    } catch (err) {
+        console.error("Error In booking slot", err)
+        res.status(400).send("Error" + err)
     }
 };
 
@@ -62,7 +65,7 @@ const addOwner = (req, res) => {
         OWNER = controllerHelper.setNewOwnerData(OWNER, data);
         OWNER.save((err, saveObj) => {
             if (err) {
-                console.error("addData:: Error in saving data. Error::", err);
+                console.error("addOwner:: Error in saving data. Error::", err);
                 res.status(400).send('Error in saving data. Error::', err);
             } else {
                 console.debug('data saved', saveObj);
@@ -82,7 +85,7 @@ const addHouse = (req, res) => {
         HOUSES = controllerHelper.setNewHouseData(HOUSES, data);
         HOUSES.save((err, saveObj) => {
             if (err) {
-                console.error("addData:: Error in saving data. Error::", err);
+                console.error("addHouse:: Error in saving data. Error::", err);
                 res.status(400).send('Error in saving data. Error::', err);
             } else {
                 console.debug('data saved', saveObj);
@@ -103,7 +106,7 @@ const addHouseVisibilitySlot = (req, res) => {
         VISIT_AVAILABILITY = controllerHelper.setHouseVisitData(VISIT_AVAILABILITY, data);
         VISIT_AVAILABILITY.save((err, saveObj) => {
             if (err) {
-                console.error("addData:: Error in saving data. Error::", err);
+                console.error("addHouseVisibilitySlot:: Error in saving data. Error::", err);
                 res.status(400).send('Error in saving data. Error::' + err.toString());
             } else {
                 console.debug('data saved', saveObj);
@@ -123,7 +126,7 @@ const addRealtor = (req, res) => {
         REALTOR = controllerHelper.setNewRealtorData(REALTOR, data);
         REALTOR.save((err, saveObj) => {
             if (err) {
-                console.error("addData:: Error in saving data. Error::", err);
+                console.error("addRealtor:: Error in saving data. Error::", err);
                 res.status(400).send('Error in saving data. Error::', err);
             } else {
                 console.debug('data saved', saveObj);
