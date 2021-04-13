@@ -91,7 +91,8 @@ const getHouseVisitData = (availableSlots)=>{
             id:slot.id,
             start_time: slot.start_time,
             duration: slot.duration,
-            day_of_week: weekDayMap[slot.day_of_week]
+            day_of_week: slot.day_of_week,
+            value: `${weekDayMap[slot.day_of_week]} ${slot.start_time} for ${slot.duration}`
         })
     });
     return slots
