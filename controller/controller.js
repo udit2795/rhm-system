@@ -8,8 +8,8 @@ const getHouseList = async (req, res) => {
         const houseList = await schemas.HOUSES.find({active: true}).lean();
         const houseDetails = controllerHelper.getList(houseList);
         console.log("===>>>> sending data", houseDetails);
-        // res.status(200).send( {data: houseDetails, status: 'success'})
-        res.status(200).render('dashboard', {data: houseDetails, status: 'success'})
+        res.status(200).send(houseDetails)
+        // res.status(200).render('dashboard', {data: houseDetails, status: 'success'})
     } catch (e) {
         console.log("===>>>> error", e);
     }
