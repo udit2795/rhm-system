@@ -92,6 +92,7 @@ const getHouseVisitData = (availableSlots)=>{
             start_time: slot.start_time,
             duration: slot.duration,
             day_of_week: slot.day_of_week,
+            realtor_id: slot.realtor_id,
             value: `${weekDayMap[slot.day_of_week]} ${slot.start_time} for ${slot.duration}`
         })
     });
@@ -137,5 +138,6 @@ module.exports = {
     setNewHouseData: setNewHouseData,
     setNewOwnerData: setNewOwnerData,
     getHouseVisitData: getHouseVisitData,
-    sendmail: sendmail
+    sendmail: sendmail,
+    setNewRealtorData: setNewRealtorData
 };
