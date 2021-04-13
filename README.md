@@ -48,3 +48,14 @@
 }'
 
 ```
+### Known bugs
+Mongo cluster id and password are hardcoded in the code. 
+solution: We can save this in env variable or in ansible.
+
+realtor id is pre inserted in visitAvailability Schema.
+solution: We can use a round robin approach for this.
+
+### Area to improve
+We can build more pages in UI to add owner, Realtor, house visit slots. To perform this some backend changes also required.
+We can store details like house id, converted (true/false), feedback in the realtor database for each tenant he is meeting with. This will help in building a report on the lead/tenant conversion.
+We can add chat support in the UI.
