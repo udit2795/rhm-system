@@ -1,15 +1,15 @@
 const router = require('express').Router();
 
-const controller = require('../controller/controller');
+const RhmSystemController = require('../controller/controller').RhmSystemController
 
-router.get('/', controller.getHouseList);
-router.get('/data', controller.getHouseList);
-router.get('/booking/:id', controller.getSlots);
-router.post('/booking', controller.bookSlots);
-router.post('/addOwner', controller.addOwner);
-router.post('/addRealtor', controller.addRealtor);
-router.post('/addHouse', controller.addHouse);
-router.post('/add_house_visibility_slot', controller.addHouseVisibilitySlot);
+router.get('/', RhmSystemController.getHouseList);
+router.get('/data', RhmSystemController.getHouseList);
+router.get('/booking/:id', RhmSystemController.getSlots);
+router.post('/booking', RhmSystemController.bookSlots);
+router.post('/addOwner', RhmSystemController.addOwner);
+router.post('/addRealtor', RhmSystemController.addRealtor);
+router.post('/addHouse', RhmSystemController.addHouse);
+router.post('/add_house_visibility_slot', RhmSystemController.addHouseVisibilitySlot);
 
 
 module.exports = router;

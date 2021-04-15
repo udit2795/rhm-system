@@ -1,10 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-var cors = require('cors')
+const cors = require('cors');
+require('dotenv').config();
 
 const routers = require('./routes/index');
-
+const db = require('./models/db').DB;
 
 const app = express();
 app.use(cors());
@@ -23,13 +23,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use('/', routers);
-
-mongoose.connect("mongodb+srv://user:sleepapp@cluster0.55hqc.mongodb.net/user?retryWrites=true&w=majority", {useNewUrlParser: true});
-mongoose.connection.once('open', () => {
-    console.log('connected to db');
-}).on('error', (err) => {
-    console.log("Error in connecting DB. Error::", err)
-});
+db.DBConnection()
 
 const port = process.env.PORT || 5000;
 
